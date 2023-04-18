@@ -51,6 +51,7 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case mips64:         return "mips64";
   case mips64el:       return "mips64el";
   case mips:           return "mips";
+  case MySimulator:    return "MySimulator";
   case mipsel:         return "mipsel";
   case msp430:         return "msp430";
   case nvptx64:        return "nvptx64";
@@ -117,6 +118,8 @@ StringRef Triple::getArchTypePrefix(ArchType Kind) {
   case mipsel:
   case mips64:
   case mips64el:    return "mips";
+
+  case MySimulator:        return "MySimulator";
 
   case hexagon:     return "hexagon";
 
@@ -323,6 +326,7 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("mips64", mips64)
     .Case("mips64el", mips64el)
     .Case("msp430", msp430)
+    .Case("MySimulator", MySimulator)
     .Case("ppc64", ppc64)
     .Case("ppc32", ppc)
     .Case("ppc", ppc)
@@ -473,6 +477,7 @@ static Triple::ArchType parseArch(StringRef ArchName) {
            "mips64r6", "mipsn32r6", Triple::mips64)
     .Cases("mips64el", "mipsn32el", "mipsisa64r6el", "mips64r6el",
            "mipsn32r6el", Triple::mips64el)
+    .Case("MySimulator", Triple::MySimulator)
     .Case("r600", Triple::r600)
     .Case("amdgcn", Triple::amdgcn)
     .Case("riscv32", Triple::riscv32)
@@ -815,6 +820,7 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::mips:
   case Triple::mipsel:
   case Triple::msp430:
+  case Triple::MySimulator:
   case Triple::nvptx64:
   case Triple::nvptx:
   case Triple::ppc64le:
@@ -1393,6 +1399,7 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::m68k:
   case llvm::Triple::mips:
   case llvm::Triple::mipsel:
+  case llvm::Triple::MySimulator:
   case llvm::Triple::nvptx:
   case llvm::Triple::ppc:
   case llvm::Triple::ppcle:
@@ -1483,6 +1490,7 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::m68k:
   case Triple::mips:
   case Triple::mipsel:
+  case Triple::MySimulator:
   case Triple::nvptx:
   case Triple::ppc:
   case Triple::ppcle:
@@ -1593,6 +1601,7 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::mipsel:
     T.setArch(Triple::mips64el, getSubArch());
     break;
+  case Triple::MySimulator:     T.setArch(Triple::MySimulator);     break;
   case Triple::nvptx:           T.setArch(Triple::nvptx64);    break;
   case Triple::ppc:             T.setArch(Triple::ppc64);      break;
   case Triple::ppcle:           T.setArch(Triple::ppc64le);    break;

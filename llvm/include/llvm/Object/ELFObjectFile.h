@@ -1198,6 +1198,8 @@ StringRef ELFObjectFile<ELFT>::getFileFormatName() const {
       return "elf32-lanai";
     case ELF::EM_MIPS:
       return "elf32-mips";
+    case ELF::EM_MySimulator:
+      return "elf32-MySimulator";
     case ELF::EM_MSP430:
       return "elf32-msp430";
     case ELF::EM_PPC:
@@ -1280,6 +1282,8 @@ template <class ELFT> Triple::ArchType ELFObjectFile<ELFT>::getArch() const {
     default:
       report_fatal_error("Invalid ELFCLASS!");
     }
+  case ELF::EM_MySimulator:
+    return Triple::MySimulator;
   case ELF::EM_MSP430:
     return Triple::msp430;
   case ELF::EM_PPC:

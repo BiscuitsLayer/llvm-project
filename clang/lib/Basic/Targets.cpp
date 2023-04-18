@@ -34,6 +34,7 @@
 #include "Targets/RISCV.h"
 #include "Targets/SPIR.h"
 #include "Targets/Sparc.h"
+#include "Targets/MySimulator.h"
 #include "Targets/SystemZ.h"
 #include "Targets/TCE.h"
 #include "Targets/VE.h"
@@ -468,6 +469,9 @@ TargetInfo *AllocateTarget(const llvm::Triple &Triple,
     default:
       return new SparcV9TargetInfo(Triple, Opts);
     }
+
+  case llvm::Triple::MySimulator:
+    return new SimTargetInfo(Triple, Opts);
 
   case llvm::Triple::systemz:
     switch (os) {
