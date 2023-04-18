@@ -11,6 +11,7 @@ tablegen(LLVM MySimulatorGenInstrInfo.inc -gen-instr-info)
 tablegen(LLVM MySimulatorGenCallingConv.inc -gen-callingconv)
 tablegen(LLVM MySimulatorGenMCPseudoLowering.inc -gen-pseudo-lowering)
 tablegen(LLVM MySimulatorGenSubtargetInfo.inc -gen-subtarget)
+tablegen(LLVM MySimulatorGenMCCodeEmitter.inc -gen-emitter)
 tablegen(LLVM MySimulatorGenAsmWriter.inc -gen-asm-writer)
 tablegen(LLVM MySimulatorGenDAGISel.inc -gen-dag-isel)
 

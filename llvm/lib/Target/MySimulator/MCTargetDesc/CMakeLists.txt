@@ -3,6 +3,13 @@ add_llvm_component_library(LLVMMySimulatorDesc
   MySimulatorMCAsmInfo.cpp
   MySimulatorMCTargetDesc.cpp
   MySimulatorInfo.cpp
+  MySimulatorAsmBackend.cpp
+  MySimulatorMCCodeEmitter.cpp
+  MySimulatorMCExpr.cpp
+  MySimulatorELFObjectWriter.cpp
+  MySimulatorTargetStreamer.cpp
+  MySimulatorELFStreamer.cpp
+  MySimulatorMCObjectFIleInfo.cpp
 
   LINK_COMPONENTS
   MC

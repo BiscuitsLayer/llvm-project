@@ -1,5 +1,6 @@
 #include "MySimulatorInstPrinter.h"
 #include "MCTargetDesc/MySimulatorInfo.h"
+#include "MCTargetDesc/MySimulatorMCExpr.h"
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/MC/MCExpr.h"
 #include "llvm/MC/MCInst.h"

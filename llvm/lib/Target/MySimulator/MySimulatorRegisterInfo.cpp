@@ -42,7 +42,7 @@ MySimulatorRegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
   if (MF->getFunction().hasFnAttribute("interrupt"))
     return CSR_Interrupt_SaveList;
 
-  return CSR_Interrupt_SaveList;
+  return CSR_ILP32_LP64_SaveList;
 }
 
 // TODO: check cconv
