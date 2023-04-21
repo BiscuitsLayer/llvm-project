@@ -22,7 +22,6 @@ class Target;
 extern Target TheMySimulatorTarget;
 
 MCCodeEmitter *createMySimulatorMCCodeEmitter(const MCInstrInfo &MCII,
-                                        const MCRegisterInfo &MRI,
                                         MCContext &Ctx);
 
 std::unique_ptr<MCObjectTargetWriter> createMySimulatorELFObjectWriter(uint8_t OSABI,

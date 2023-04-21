@@ -9,6 +9,7 @@
 #include "llvm/MC/MCSymbolELF.h"
 #include "llvm/MC/MCValue.h"
 #include "llvm/Support/ErrorHandling.h"
+#include "llvm/Support/Casting.h"
 
 using namespace llvm;
 

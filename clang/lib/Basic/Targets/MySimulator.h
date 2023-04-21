@@ -8,11 +8,12 @@
 #include "llvm/ADT/Triple.h"
 #include "llvm/Support/Compiler.h"
 
-namespace clang::targets {
+namespace clang {
+namespace targets {
 
-class LLVM_LIBRARY_VISIBILITY SimTargetInfo : public TargetInfo {
+class LLVM_LIBRARY_VISIBILITY MySimulatorTargetInfo : public TargetInfo {
 public:
-  SimTargetInfo(const llvm::Triple &Triple, const TargetOptions &)
+  MySimulatorTargetInfo(const llvm::Triple &Triple, const TargetOptions &)
       : TargetInfo(Triple) {
     NoAsmVariants = true;
     LongLongAlign = 32;
@@ -62,6 +63,7 @@ public:
   bool isCLZForZeroUndef() const override { return false; }
 };
 
-} // namespace clang::targets
+} // namespace targets
+} // namespace clang
 
 #endif // __CLANG_LIB_BASIC_TARGETS_MY_SIMULATOR_H__
