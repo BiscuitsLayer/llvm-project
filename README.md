@@ -4,7 +4,7 @@ Added target **MySimulator** for self-made simulator with graphics support
  
 ## Build
  
-**⚠️WARNING!⚠️** If LLVM is built by Windows 10 Pro, Visual Studio 17 2022, you should have almost ❗78-80 GB❗ space on disk available
+**⚠️WARNING!⚠️** If LLVM is built by Windows 10 Pro, Visual Studio 17 2022, you should have at least ❗78-80 GB❗ space on disk and 2-3 free hours available.
  
 	# Download repository
 	git clone https://github.com/BiscuitsLayer/llvm-project-mod.git
@@ -15,8 +15,9 @@ Added target **MySimulator** for self-made simulator with graphics support
 	cd build
  
 	# Build
-	cmake ..\ -S ..\llvm -B ./ -DLLVM_ENABLE_PROJECTS="clang" -DCMAKE_INSTALL_PREFIX=../install/ -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=On -DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=MySimulator
-	cmake --build . --parallel 8
+	cmake -S ..\llvm -B ./ -DLLVM_ENABLE_PROJECTS="clang" -DCMAKE_INSTALL_PREFIX:PATH=../install/ -DCMAKE_BUILD_TYPE=Debug -DLLVM_ENABLE_ASSERTIONS=On -DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=MySimulator
+	cmake --build . --parallel 24
+	cmake --install .
  
 This builds necessary LLVM subset and registers **x86** and **MySimulator** targets
  
@@ -25,6 +26,12 @@ This builds necessary LLVM subset and registers **x86** and **MySimulator** targ
  
 	# Review targets
 	.\Debug\bin\clang++.exe -print-targets
+	
+	# Output
+	Registered Targets:
+    		MySimulator - MySimulator (32-bit arch) - for LLVM course in MIPT
+    		x86         - 32-bit X86: Pentium-Pro and above
+    		x86-64      - 64-bit X86: EM64T and AMD64
  
 ## Check
  
@@ -145,4 +152,4 @@ main:
 	.section	".note.GNU-stack","",@progbits
 ```
  
-Now this file is ready to be executed on our [self-made simulator](https://github.com/BiscuitsLayer/Scheme-Raytracer)!
+Now this file is ready to be executed on our [self-made simulator](https://github.com/BiscuitsLayer/SchemeRaytracer)!
