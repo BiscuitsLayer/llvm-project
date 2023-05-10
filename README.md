@@ -15,13 +15,7 @@ Added target **MySimulator** for self-made simulator with graphics support
 	cd build
  
 	# Build
-	cmake ..\ -S ..\llvm -B ./ 
-		-DLLVM_ENABLE_PROJECTS="clang" 
-		-DCMAKE_INSTALL_PREFIX=../install/ 
-		-DCMAKE_BUILD_TYPE=Release 
-		-DLLVM_ENABLE_ASSERTIONS=On 
-		-DLLVM_TARGETS_TO_BUILD=X86 
-		-DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=MySimulator
+	cmake ..\ -S ..\llvm -B ./ -DLLVM_ENABLE_PROJECTS="clang" -DCMAKE_INSTALL_PREFIX=../install/ -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=On -DLLVM_TARGETS_TO_BUILD=X86 -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=MySimulator
 	cmake --build . --parallel 8
  
 This builds necessary LLVM subset and registers **x86** and **MySimulator** targets
