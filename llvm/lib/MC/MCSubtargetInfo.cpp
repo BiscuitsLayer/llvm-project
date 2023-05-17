@@ -55,6 +55,8 @@ void ClearImpliedBits(FeatureBitset &Bits, unsigned Value,
   }
 }
 
+bool Cpu0DisableUnreconginizedMessage = false;
+
 static void ApplyFeatureFlag(FeatureBitset &Bits, StringRef Feature,
                              ArrayRef<SubtargetFeatureKV> FeatureTable) {
   assert(SubtargetFeatures::hasFlag(Feature) &&
@@ -78,8 +80,9 @@ static void ApplyFeatureFlag(FeatureBitset &Bits, StringRef Feature,
       ClearImpliedBits(Bits, FeatureEntry->Value, FeatureTable);
     }
   } else {
-    errs() << "'" << Feature << "' is not a recognized feature for this target"
-           << " (ignoring feature)\n";
+    if (!Cpu0DisableUnreconginizedMessage) // For Cpu0
+      errs() << "'" << Feature << "' is not a recognized feature for this target"
+             << " (ignoring feature)\n";
   }
 }
 
@@ -185,7 +188,7 @@ static FeatureBitset getFeatures(StringRef CPU, StringRef TuneCPU, StringRef FS,
     if (CPUEntry) {
       // Set the features implied by this CPU feature, if any.
       SetImpliedBits(Bits, CPUEntry->TuneImplies.getAsBitset(), ProcFeatures);
-    } else if (TuneCPU != CPU) {
+    } else if (TuneCPU != CPU && CPU != "mips32r2"/* For Cpu0*/) {
       errs() << "'" << TuneCPU << "' is not a recognized processor for this "
              << "target (ignoring processor)\n";
     }
@@ -207,6 +210,11 @@ static FeatureBitset getFeatures(StringRef CPU, StringRef TuneCPU, StringRef FS,
 
 void MCSubtargetInfo::InitMCProcessorInfo(StringRef CPU, StringRef TuneCPU,
                                           StringRef FS) {
+  #if 1 // Disable reconginized processor message. For Cpu0
+  if (TargetTriple.getArch() == llvm::Triple::cpu0 ||
+      TargetTriple.getArch() == llvm::Triple::cpu0el)
+    Cpu0DisableUnreconginizedMessage = true;
+  #endif
   FeatureBits = getFeatures(CPU, TuneCPU, FS, ProcDesc, ProcFeatures);
   if (!TuneCPU.empty())
     CPUSchedModel = &getSchedModelForCPU(TuneCPU);
@@ -279,8 +287,9 @@ FeatureBitset MCSubtargetInfo::ToggleFeature(StringRef Feature) {
                      ProcFeatures);
     }
   } else {
-    errs() << "'" << Feature << "' is not a recognized feature for this target"
-           << " (ignoring feature)\n";
+    if (!Cpu0DisableUnreconginizedMessage) // For Cpu0
+      errs() << "'" << Feature << "' is not a recognized feature for this target"
+             << " (ignoring feature)\n";
   }
 
   return FeatureBits;
@@ -312,9 +321,13 @@ const MCSchedModel &MCSubtargetInfo::getSchedModelForCPU(StringRef CPU) const {
 
   if (!CPUEntry) {
     if (CPU != "help") // Don't error if the user asked for help.
-      errs() << "'" << CPU
-             << "' is not a recognized processor for this target"
-             << " (ignoring processor)\n";
+      #if 1 // Disable reconginized processor message. For Cpu0
+      if (TargetTriple.getArch() != llvm::Triple::cpu0 &&
+          TargetTriple.getArch() != llvm::Triple::cpu0el)
+      #endif
+        errs() << "'" << CPU
+               << "' is not a recognized processor for this target"
+               << " (ignoring processor)\n";
     return MCSchedModel::GetDefaultSchedModel();
   }
   assert(CPUEntry->SchedModel && "Missing processor SchedModel value");

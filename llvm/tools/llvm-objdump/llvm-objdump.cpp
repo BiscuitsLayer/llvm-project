@@ -1877,7 +1877,8 @@ static void disassembleObject(const Target *TheTarget, const ObjectFile *Obj,
       if (Obj->isXCOFF() && SymbolDescription) {
         outs() << getXCOFFSymbolDescription(Symbols[SI], SymbolName) << ":\n";
       } else
-        outs() << '<' << SymbolName << ">:\n";
+        outs() << "/* " << SymbolName << ":*/\n"; // For Cpu0
+
 
       // Don't print raw contents of a virtual section. A virtual section
       // doesn't have any contents in the file.
@@ -2950,6 +2951,7 @@ static void dumpInput(StringRef file) {
     reportError(errorCodeToError(object_error::invalid_file_type), file);
 }
 
+#ifndef ELF2HEX
 int main(int argc, char **argv) {
   using namespace llvm;
   InitLLVM X(argc, argv);
@@ -3010,3 +3012,4 @@ int main(int argc, char **argv) {
 
   return EXIT_SUCCESS;
 }
+#endif

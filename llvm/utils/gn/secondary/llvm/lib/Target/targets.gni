@@ -15,6 +15,7 @@ llvm_all_targets = [
   "Hexagon",
   "Lanai",
   "Mips",
+  "Cpu0",
   "NVPTX",
   "PowerPC",
   "RISCV",
@@ -48,6 +49,7 @@ llvm_build_AMDGPU = false
 llvm_build_ARM = false
 llvm_build_BPF = false
 llvm_build_Mips = false
+llvm_build_Cpu0 = false
 llvm_build_PowerPC = false
 llvm_build_WebAssembly = false
 llvm_build_X86 = false
@@ -62,6 +64,8 @@ foreach(target, llvm_targets_to_build) {
     llvm_build_BPF = true
   } else if (target == "Mips") {
     llvm_build_Mips = true
+  } else if (target == "Cpu0") {
+    llvm_build_Cpu0 = true
   } else if (target == "PowerPC") {
     llvm_build_PowerPC = true
   } else if (target == "WebAssembly") {
