@@ -10,3 +10,6 @@ add_subdirectory(HelloNew)
 add_subdirectory(ObjCARC)
 add_subdirectory(Coroutines)
 add_subdirectory(CFGuard)
+
+# Self-made pass
+add_subdirectory(LoopCounter)
