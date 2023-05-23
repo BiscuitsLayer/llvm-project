@@ -1,12 +1,12 @@
-
 #include "llvm/Analysis/LoopPass.h"
 #include "llvm/Analysis/ScalarEvolution.h"
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/Pass.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/Transforms/IPO/PassManagerBuilder.h"
+#include "llvm/IR/IRBuilder.h"
 using namespace llvm;
-
+ 
 namespace {
 struct LoopCounterPass : public LoopPass {
     static char ID; // Pass identification, replacement for typeid
@@ -14,9 +14,18 @@ struct LoopCounterPass : public LoopPass {
         : LoopPass(ID)
     {
     }
-
+ 
     virtual bool runOnLoop(Loop* L, LPPassManager& LPM)
     {
+        Module *M = L->getHeader()->getParent()->getParent();
+        Function *F = L->getHeader()->getParent();
+ 
+        LLVMContext &ctx = F->getContext();
+        IRBuilder<> builder(ctx);
+ 
+        auto *FT = FunctionType::get(builder.getVoidTy(), {}, false);
+        auto log_function = M->getOrInsertFunction("BranchLogger", FT);
+ 
         outs() << "Loop info:"
                << "\n";
         outs() << *L << "\n";
@@ -24,7 +33,17 @@ struct LoopCounterPass : public LoopPass {
         outs() << "Is innermost: " << L->isInnermost() << "\n";
         outs() << "Blocks number: " << L->getNumBlocks() << "\n";
         outs() << "Is guarded: " << L->isGuarded() << "\n";
-
+        for (auto *BB: L->getBlocks()) {
+          for (auto &I: BB->getInstList()) {
+            if (BranchInst *Branch = dyn_cast<BranchInst>(&I)) {
+              outs() << "Branch instruction found." << "\n";
+              builder.SetInsertPoint(Branch);
+              builder.SetInsertPoint(BB, ++builder.GetInsertPoint());
+              builder.CreateCall(log_function, {});
+            }
+          }
+        }
+ 
         bool isCountable = getAnalysis<ScalarEvolutionWrapperPass>()
                                .getSE()
                                .hasLoopInvariantBackedgeTakenCount(L);
@@ -39,10 +58,10 @@ struct LoopCounterPass : public LoopPass {
             LoopIterNum->print(outs());
             outs() << "\n";
         }
-
+ 
         return false;
     }
-
+ 
     void getAnalysisUsage(AnalysisUsage& AU) const override
     {
         AU.addRequired<LoopInfoWrapperPass>();
@@ -52,17 +71,16 @@ struct LoopCounterPass : public LoopPass {
         AU.setPreservesAll();
     }
 };
-
+ 
 } // namespace
-
+ 
 char LoopCounterPass::ID = 0;
-
-static void RegisterLoopCounterPass(const PassManagerBuilder &, legacy::PassManagerBase &PM) {
-  PM.add(new LoopCounterPass());
-}
-static RegisterStandardPasses RegisterMyPass(PassManagerBuilder::EP_EarlyAsPossible, RegisterLoopCounterPass);
-
-// static RegisterPass<LoopCounterPass> X("loopcounter", "Loop Counter Pass",
-//     false /* Only looks at CFG */,
-//     true /* Analysis Pass */);
-
+ 
+// static void RegisterLoopCounterPass(const PassManagerBuilder &, legacy::PassManagerBase &PM) {
+//   PM.add(new LoopCounterPass());
+// }
+// static RegisterStandardPasses RegisterMyPass(PassManagerBuilder::EP_EarlyAsPossible, RegisterLoopCounterPass);
+ 
+static RegisterPass<LoopCounterPass> X("loopcounter", "Loop Counter Pass",
+    false /* Only looks at CFG */,
+    true /* Analysis Pass */);
